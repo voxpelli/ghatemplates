@@ -1,0 +1,24 @@
+name: Node CI
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    name: Node ${{ matrix.node_version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: [12, 14, 15]
+        os: [ubuntu-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node_version }}
+      uses: actions/setup-node@v2
+      with:
+        node-version: ${{ matrix.node_version }}
+    - run: yarn install
+    - run: yarn run test-ci
