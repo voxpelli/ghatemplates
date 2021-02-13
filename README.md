@@ -4,17 +4,35 @@ My personal GitHub Actions workflow templates for [`ghat`](https://github.com/fr
 
 ## Example Usage
 
-Initial setup:
+### Initial setup
 
 ```bash
 npx ghat voxpelli/ghatemplates/lint
 npx ghat voxpelli/ghatemplates/nodejs --set jobs.test.strategy.matrix.node_version=\[12,14,15\]
 ```
 
-To update with latest versions:
+### Update to latest version
 
 ```bash
 npx ghat
+```
+
+Or _preferably_ document your use of `ghat`, and which version, by adding it as a dev dependency, then also add a dedicated npm script to indicate how to use it:
+
+```bash
+npm install --dev ghat
+```
+
+In `"scripts"` in `package.json`:
+
+```json
+"sync-gh-actions": "ghat",
+```
+
+Then sync using:
+
+```bash
+npm run sync-gh-actions
 ```
 
 ## Available actions
