@@ -45,7 +45,7 @@ npm run sync-gh-actions
 
 * `nodejs/nodejs.yml` – _uses `yarn`_ – basic one which installs npm dependencies and then runs the `test-ci` npm script across a matrix composed of Linux + Windows and a couple of relevant Node.js versions. The matrix is expected to be overridden with use specific settings.
 * `nodejs-pg/nodejs.yml` – _uses `yarn`_ – similar to `nodejs/nodejs.yml`, but also sets up a Postgres database and sets a `DATABASE_URL` with a connection URI as eg. the port may differ and thus can't be hard coded but also since the username and password in CI is probably different from what one uses eg. locally. By default has a more limited test matrix than `nodejs/nodejs.yml` as it has an extra dimension which could mean a large amount of combinations.
-* `nodejs-coveralls/nodejs.yml` – _uses `yarn`_ – _to be extracted_ – similar to `nodejs/nodejs.yml`, but uploads test coverage data to Coveralls
+* `nodejs-coveralls/nodejs.yml` – _uses `yarn`_ – similar to `nodejs/nodejs.yml`, but uploads test coverage data to Coveralls
 
 ### Automatic Publishing
 
