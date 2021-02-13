@@ -39,7 +39,7 @@ npm run sync-gh-actions
 
 ### Static code analysis
 
-* `lint/lint.yml` – _uses `yarn`_ – installs npm dependencies and then runs the `check` npm script, which is expected to be available. Has no test matrix set up as the static code analysis is expected to be the same no matter the Node.js version or OS
+* `lint/lint.yml` – _uses `yarn`_ – installs npm dependencies and then runs the `check` npm script, which is expected to be available.  Has a basic matrix set, testing on a single Node.js version on a single OS, but can be overridden.
 
 ### Node.js CI
 
