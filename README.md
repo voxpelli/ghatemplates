@@ -39,11 +39,11 @@ npm run sync-gh-actions
 
 ### Static code analysis
 
-* `lint/lint.yml` – _uses `yarn`_ – installs npm dependencies and then runs the `check` npm script, which is expected to be available.  Has a basic matrix set, testing on a single Node.js version on a single OS, but can be overridden.
+* `lint/lint.yml` – _uses `npm`_ – installs npm dependencies and then runs the `check` npm script, which is expected to be available.  Has a basic matrix set, testing on a single Node.js version on a single OS, but can be overridden.
 
 ### Node.js CI
 
-* `nodejs/nodejs.yml` – _uses `yarn`_ – basic one which installs npm dependencies and then runs the `test-ci` npm script across a matrix composed of Linux + Windows and a couple of relevant Node.js versions. The matrix is expected to be overridden with use specific settings.
+* `nodejs/nodejs.yml` – _uses `npm`_ – basic one which installs npm dependencies and then runs the `test-ci` npm script across a matrix composed of Linux + Windows and a couple of relevant Node.js versions. The matrix is expected to be overridden with use specific settings.
 * `nodejs-pg/nodejs.yml` – _uses `yarn`_ – similar to `nodejs/nodejs.yml`, but also sets up a Postgres database and sets a `DATABASE_URL` with a connection URI as eg. the port may differ and thus can't be hard coded but also since the username and password in CI is probably different from what one uses eg. locally. By default has a more limited test matrix than `nodejs/nodejs.yml` as it has an extra dimension which could mean a large amount of combinations.
 * `nodejs-coveralls/nodejs.yml` – _uses `yarn`_ – similar to `nodejs/nodejs.yml`, but uploads test coverage data to Coveralls
 
