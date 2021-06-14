@@ -8,7 +8,7 @@ My personal GitHub Actions workflow templates for [`ghat`](https://github.com/fr
 
 ```bash
 npx ghat voxpelli/ghatemplates/lint
-npx ghat voxpelli/ghatemplates/nodejs --set jobs.test.strategy.matrix.node_version=\[12,14,15\]
+npx ghat voxpelli/ghatemplates/nodejs --set jobs.test.strategy.matrix.node_version=\[12,14,16\]
 ```
 
 ### Update to latest version
