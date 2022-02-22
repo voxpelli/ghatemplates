@@ -37,7 +37,8 @@ jobs:
       with:
         node-version: ${{ matrix.node_version }}
         cache: 'npm'
-    - run: npm install
+    - name: npm install/ci
+      run: '[ -f package-lock.json ] && npm ci --ignore-scripts || npm install --ignore-scripts'
     - run: npm run test-ci
       env:
         DATABASE_URL: "postgres://postgres:postgres@localhost:${{ job.services.postgres.ports[5432] }}/postgres"

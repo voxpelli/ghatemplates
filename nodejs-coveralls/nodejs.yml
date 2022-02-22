@@ -34,7 +34,8 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json', '**/package.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
-    - run: npm install
+    - name: npm install/ci
+      run: '[ -f package-lock.json ] && npm ci --ignore-scripts || npm install --ignore-scripts'
     - run: npm run test-ci
     - name: Coveralls Parallel
       uses: coverallsapp/github-action@v1.1.2
