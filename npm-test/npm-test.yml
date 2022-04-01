@@ -25,7 +25,9 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node_version }}
-    - name: npm install
-      run: npm install --ignore-scripts
+    - name: npm install/ci
+      run: >-
+        [ -f package-lock.json ] && npm ci --ignore-scripts || npm install
+        --ignore-scripts
     - run: npm run build --if-present
     - run: npm test
