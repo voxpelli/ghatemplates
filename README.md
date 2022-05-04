@@ -11,6 +11,12 @@ npx ghat voxpelli/ghatemplates/lint
 npx ghat voxpelli/ghatemplates/nodejs --set jobs.test.strategy.matrix.node_version=\[12,14,16\]
 ```
 
+Other useful:
+
+```bash
+npx ghat voxpelli/ghatemplates/exit-silently-on-unsupported
+```
+
 ### Update to latest version
 
 ```bash
