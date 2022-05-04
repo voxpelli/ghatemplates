@@ -22,6 +22,7 @@ jobs:
       matrix:
         node_version: [0.10.48]
         os: [ubuntu-latest]
+        files: [./cli.js]
 
     steps:
     - uses: actions/checkout@v3
@@ -42,5 +43,5 @@ jobs:
     - name: npm install
       run: npm install --ignore-scripts
     - name: Test that the command line program exits cleanly.
-      run: ./cli.js
+      run: ${{ matrix.files }}
       shell: bash
