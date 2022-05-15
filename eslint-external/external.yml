@@ -20,6 +20,9 @@ on:
         - compliant
         - nonCompliant
 
+permissions:
+  contents: read
+
 jobs:
   read_external_projects:
     name: Read list of ${{ github.event.inputs.moduleSet || 'compliant' }} external projects

@@ -10,6 +10,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Test on node ${{ matrix.node_version }} and ${{ matrix.os }} with Postgres ${{ matrix.postgres_version }}
