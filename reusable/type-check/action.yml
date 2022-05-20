@@ -19,12 +19,12 @@ permissions:
 jobs:
   resolve_ts_versions:
     steps:
-      - uses: voxpelli/ghatemplates/reusable/split-string.yml@main
+      - uses: voxpelli/ghatemplates/reusable/split-string@main
         with:
           value: ${{ inputs.ts-versions }}
   resolve_ts_libs:
     steps:
-      - uses: voxpelli/ghatemplates/reusable/split-string.yml@main
+      - uses: voxpelli/ghatemplates/reusable/split-string@main
         with:
           value: ${{ inputs.ts-libs }}
   test:
