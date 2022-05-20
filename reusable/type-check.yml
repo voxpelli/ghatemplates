@@ -1,0 +1,63 @@
+name: Type Checks
+
+on:
+  workflow_call:
+    inputs:
+      ts-versions:
+        description: 'A comma separated list of TypeScript versions that you want to test against.'
+        required: false
+        default: '4.5,4.6,rc'
+        type: string
+      ts-libs:
+        description: 'A comma separated list of TypeScript libs that you want to test against.'
+        required: false
+        default: 'es2020,esnext'
+        type: string
+permissions:
+  contents: read
+
+jobs:
+  resolve_ts_versions:
+    steps:
+      - uses: voxpelli/ghatemplates/reusable/split-string@main
+        with:
+          value: ${{ inputs.ts-versions }}
+  resolve_ts_libs:
+    steps:
+      - uses: voxpelli/ghatemplates/reusable/split-string@main
+        with:
+          value: ${{ inputs.ts-libs }}
+  test:
+    name: TS ${{ matrix.ts_version }} with lib "${{ matrix.tslib }}"
+    runs-on: ubuntu-latest
+    needs:
+      - resolve_ts_versions
+      - resolve_ts_libs
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: [lts/*]
+        ts_version: ${{ needs.resolve_ts_versions.outputs.value }}
+        tslib: ${{ needs.resolve_ts_libs.outputs.value }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node_version }}
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json', '**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: npm install
+        run: npm install --ignore-scripts
+      - name: install typescript version ${{ matrix.ts_version }}
+        run: npm install --force typescript@${{ matrix.ts_version }}
+      - name: test using lib "${{ matrix.tslib }}"
+        run: npx tsc --lib ${{ matrix.tslib }}

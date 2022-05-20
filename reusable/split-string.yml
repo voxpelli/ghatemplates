@@ -1,0 +1,26 @@
+name: Split string
+
+on:
+  workflow_call:
+    inputs:
+      value:
+        description: 'A comma separated string to split'
+        required: true
+        type: string
+    outputs:
+      value:
+        description: 'A list of strings'
+        value: ${{ jobs.splitter.outputs.value }}
+
+permissions: {}
+
+jobs:
+  splitter:
+    name: Splitting string
+    runs-on: ubuntu-latest
+    outputs:
+      value: ${{ steps.set-value.outputs.value }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: set-value
+        run: echo "::set-output name=splitted::$(echo '.${{ github.event.inputs.value }}' | sed 's/,/\n/g')"
