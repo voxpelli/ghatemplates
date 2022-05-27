@@ -18,13 +18,15 @@ permissions:
 
 jobs:
   resolve_ts_versions:
+    runs-on: ubuntu-latest
     steps:
-      - uses: voxpelli/ghatemplates/reusable/split-string@main
+      - uses: voxpelli/ghatemplates/.github/workflows/split-string@main
         with:
           value: ${{ inputs.ts-versions }}
   resolve_ts_libs:
+    runs-on: ubuntu-latest
     steps:
-      - uses: voxpelli/ghatemplates/reusable/split-string@main
+      - uses: voxpelli/ghatemplates/.github/workflows/split-string@main
         with:
           value: ${{ inputs.ts-libs }}
   test:
