@@ -25,9 +25,9 @@ jobs:
       tsLibs: ${{ steps.split-ts-libs.outputs.splitted }}
     steps:
       - id: split-ts-versions
-        run: echo "::set-output name=splitted::$(echo '${{ inputs.ts-versions }}' | sed 's/,/\n/g')"
+        run: echo "::set-output name=splitted::$(echo '${{ inputs.ts-versions }}' | jq -R -c 'split(",")')"
       - id: split-ts-libs
-        run: echo "::set-output name=splitted::$(echo '${{ inputs.ts-libs }}' | sed 's/,/\n/g')"
+        run: echo "::set-output name=splitted::$(echo '${{ inputs.ts-libs }}' | jq -R -c 'split(",")')"
   test:
     name: TS ${{ matrix.ts_version }} with lib "${{ matrix.tslib }}"
     runs-on: ubuntu-latest
@@ -37,8 +37,8 @@ jobs:
       fail-fast: false
       matrix:
         node_version: [lts/*]
-        ts_version: ${{ needs.resolve_inputs.outputs.tsVersions }}
-        ts_lib: ${{ needs.resolve_inputs.outputs.tsLibs }}
+        ts_version: ${{ fromJson(needs.resolve_inputs.outputs.tsVersions) }}
+        ts_lib: ${{ fromJson(needs.resolve_inputs.outputs.tsLibs) }}
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node_version }}
