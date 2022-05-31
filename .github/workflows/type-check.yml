@@ -25,9 +25,9 @@ jobs:
       tsLibs: ${{ steps.split-ts-libs.outputs.splitted }}
     steps:
       - id: split-ts-versions
-        run: echo "::set-output name=splitted::$(echo '.${{ inputs.ts-versions }}' | sed 's/,/\n/g')"
+        run: echo "::set-output name=splitted::$(echo '${{ inputs.ts-versions }}' | sed 's/,/\n/g')"
       - id: split-ts-libs
-        run: echo "::set-output name=splitted::$(echo '.${{ inputs.ts-libs }}' | sed 's/,/\n/g')"
+        run: echo "::set-output name=splitted::$(echo '${{ inputs.ts-libs }}' | sed 's/,/\n/g')"
   test:
     name: TS ${{ matrix.ts_version }} with lib "${{ matrix.tslib }}"
     runs-on: ubuntu-latest
