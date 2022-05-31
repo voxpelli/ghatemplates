@@ -19,7 +19,7 @@ jobs:
     name: Splitting string
     runs-on: ubuntu-latest
     outputs:
-      value: ${{ steps.set-value.outputs.value }}
+      splitted: ${{ steps.set-value.outputs.value }}
     steps:
       - uses: actions/checkout@v3
       - id: set-value
