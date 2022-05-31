@@ -1,0 +1,61 @@
+name: Linting
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        description: 'A comma separated list of operating systems to test on.'
+        required: false
+        default: 'ubuntu-latest'
+        type: string
+      node-versions:
+        description: 'A comma separated list of Node versions to test with.'
+        required: false
+        default: 'lts/*'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  resolve_inputs:
+    name: Resolving inputs
+    runs-on: ubuntu-latest
+    outputs:
+      os: ${{ steps.split-os.outputs.splitted }}
+      nodeVersions: ${{ steps.split-node-versions.outputs.splitted }}
+    steps:
+      - id: split-os
+        run: echo "::set-output name=splitted::$(echo '${{ inputs.os }}' | jq -R -c 'split(",")')"
+      - id: split-node-versions
+        run: echo "::set-output name=splitted::$(echo '${{ inputs.node-versions }}' | jq -R -c 'split(",")')"
+
+  lint:
+    name: Node ${{ matrix.node_version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    needs:
+      - resolve_inputs
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: ${{ fromJson(needs.resolve_inputs.outputs.nodeVersions) }}
+        os: ${{ fromJson(needs.resolve_inputs.outputs.os) }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node_version }}
+      - name: Get npm cache directory
+        id: npm-cache-dir
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+      - uses: actions/cache@v3
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json', '**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: npm install
+        run: npm install --ignore-scripts
+      - run: npm run check

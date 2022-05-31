@@ -13,12 +13,13 @@ on:
         required: false
         default: 'es2020,esnext'
         type: string
+
 permissions:
   contents: read
 
 jobs:
   resolve_inputs:
-    name: Splitting string
+    name: Resolving inputs
     runs-on: ubuntu-latest
     outputs:
       tsVersions: ${{ steps.split-ts-versions.outputs.splitted }}
