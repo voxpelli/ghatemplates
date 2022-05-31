@@ -11,7 +11,7 @@ on:
       ts-libs:
         description: 'A comma separated list of TypeScript libs that you want to test against.'
         required: false
-        default: 'es2020,esnext'
+        default: 'es2020;esnext'
         type: string
 
 permissions:
@@ -28,7 +28,7 @@ jobs:
       - id: split-ts-versions
         run: echo "::set-output name=splitted::$(echo '${{ inputs.ts-versions }}' | jq -R -c 'split(",")')"
       - id: split-ts-libs
-        run: echo "::set-output name=splitted::$(echo '${{ inputs.ts-libs }}' | jq -R -c 'split(",")')"
+        run: echo "::set-output name=splitted::$(echo '${{ inputs.ts-libs }}' | jq -R -c 'split(";")')"
   test:
     name: TS ${{ matrix.ts_version }} with lib "${{ matrix.ts_lib }}"
     runs-on: ubuntu-latest
