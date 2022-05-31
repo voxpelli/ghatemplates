@@ -6,7 +6,7 @@ on:
       ts-versions:
         description: 'A comma separated list of TypeScript versions that you want to test against.'
         required: false
-        default: '4.5,4.6,rc'
+        default: '4.5,4.6,4.7'
         type: string
       ts-libs:
         description: 'A comma separated list of TypeScript libs that you want to test against.'
