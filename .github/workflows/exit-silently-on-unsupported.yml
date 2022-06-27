@@ -34,7 +34,7 @@ jobs:
         run: echo "::set-output name=splitted::$(echo '${{ inputs.node-versions }}' | jq -R -c 'split(",")')"
 
   test:
-    name: ${{ matrix.files }} with Node ${{ matrix.node_version }} on ${{ matrix.os }}
+    name: ${{ matrix.files }} with Node ${{ matrix.node_version }}
     runs-on: ${{ matrix.os }}
     needs:
       - resolve_inputs
