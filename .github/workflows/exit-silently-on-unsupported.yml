@@ -1,0 +1,68 @@
+# Special test for the oldest version of Node.js that we "support"
+# Ensures that the exposed CLI scripts fails silently there
+
+name: Exit silently on unsupported
+
+on:
+  workflow_call:
+    inputs:
+      files:
+        description: 'A comma separated list of files to test with.'
+        required: false
+        default: './cli.js'
+        type: string
+      node-versions:
+        description: 'A comma separated list of Node versions to test with.'
+        required: false
+        default: '0.10.48'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  resolve_inputs:
+    name: Resolving inputs
+    runs-on: ubuntu-latest
+    outputs:
+      files: ${{ steps.split-files.outputs.splitted }}
+      nodeVersions: ${{ steps.split-node-versions.outputs.splitted }}
+    steps:
+      - id: split-files
+        run: echo "::set-output name=splitted::$(echo '${{ inputs.files }}' | jq -R -c 'split(",")')"
+      - id: split-node-versions
+        run: echo "::set-output name=splitted::$(echo '${{ inputs.node-versions }}' | jq -R -c 'split(",")')"
+
+  test:
+    name: ${{ matrix.files }} with Node ${{ matrix.node_version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    needs:
+      - resolve_inputs
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: ${{ fromJson(needs.resolve_inputs.outputs.nodeVersions) }}
+        os: ['ubuntu-latest']
+        files: ${{ fromJson(needs.resolve_inputs.outputs.files) }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node_version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node_version }}
+    - name: Get npm cache directory
+      id: npm-cache-dir
+      run: |
+        echo "::set-output name=dir::$(npm config get cache)"
+    - uses: actions/cache@v3
+      with:
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json', '**/package.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: npm install
+      run: npm install --ignore-scripts
+    - name: Test that "${{ matrix.files }}" exits silently
+      run: node ${{ matrix.files }}
+      shell: bash
