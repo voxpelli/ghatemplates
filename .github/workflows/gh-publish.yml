@@ -3,7 +3,6 @@ name: Node.js Package
 on:
   workflow_call:
 
-
 permissions:
   contents: read
 
