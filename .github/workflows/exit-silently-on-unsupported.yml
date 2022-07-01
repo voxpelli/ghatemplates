@@ -17,6 +17,10 @@ on:
         default: '0.10.48'
         type: string
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
