@@ -1,0 +1,33 @@
+name: Test
+
+on:
+  workflow_call:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Node ${{ matrix.node_version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: [lts/*]
+        os: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node_version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node_version }}
+    - name: npm install/ci
+      run: >-
+        [ -f package-lock.json ] && npm ci --ignore-scripts || npm install
+        --ignore-scripts
+    - run: npm run build --if-present
+    - run: npm test
