@@ -1,0 +1,81 @@
+name: Node Tests with Postgres
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        description: 'A comma separated list of operating systems to test on.'
+        required: false
+        default: 'ubuntu-latest'
+        type: string
+      node-versions:
+        description: 'A comma separated list of Node versions to test with.'
+        required: false
+        default: '14,16,18'
+        type: string
+      pg-versions:
+        description: 'A comma separated list of Postgres versions to test with.'
+        required: false
+        default: '13, 12'
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  resolve_inputs:
+    name: Resolving inputs
+    runs-on: ubuntu-latest
+    outputs:
+      os: ${{ steps.split-os.outputs.splitted }}
+      nodeVersions: ${{ steps.split-node-versions.outputs.splitted }}
+      pgVersions: ${{ steps.split-pg-versions.outputs.splitted }}
+    steps:
+      - id: split-os
+        run: echo "::set-output name=splitted::$(echo '${{ inputs.os }}' | jq -R -c 'split(",")')"
+      - id: split-node-versions
+        run: echo "::set-output name=splitted::$(echo '${{ inputs.node-versions }}' | jq -R -c 'split(",")')"
+      - id: split-pg-versions
+        run: echo "::set-output name=splitted::$(echo '${{ inputs.pg-versions }}' | jq -R -c 'split(",")')"
+
+  test:
+    name: Node ${{ matrix.node_version }} + Postgres ${{ matrix.postgres_version }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    needs:
+      - resolve_inputs
+    strategy:
+      fail-fast: false
+      matrix:
+        node_version: ${{ fromJson(needs.resolve_inputs.outputs.nodeVersions) }}
+        os: ${{ fromJson(needs.resolve_inputs.outputs.os) }}
+        postgres_version: ${{ fromJson(needs.resolve_inputs.outputs.pgVersions) }}
+    services:
+      postgres:
+        image: postgres:${{ matrix.postgres_version }}
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+        # will assign a random free host port
+        - 5432/tcp
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node_version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node_version }}
+    - name: npm install
+      run: npm install --ignore-scripts
+    - run: npm run test-ci
+      env:
+        PGUSER: postgres
+        PGPASSWORD: postgres
+        PGDATABASE: postgres
+        PGPORT: ${{ job.services.postgres.ports[5432] }}
