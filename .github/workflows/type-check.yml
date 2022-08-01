@@ -42,7 +42,7 @@ jobs:
       - id: split-ts-projects
         run: echo "::set-output name=splitted::$(echo '${{ inputs.ts-projects }}' | jq -R -c 'split(",")')"
   test:
-    name: TS ${{ matrix.ts_version }}, "${{ matrix.ts_lib }}" (${{ matrix.ts_project }})
+    name: TS ${{ matrix.ts_version }}, "${{ matrix.ts_lib }}", ${{ matrix.ts_project }}
     runs-on: ubuntu-latest
     needs:
       - resolve_inputs
