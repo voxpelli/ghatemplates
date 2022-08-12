@@ -18,6 +18,11 @@ on:
         required: false
         default: true
         type: boolean
+      npm-test-script:
+        description: 'The name of the npm test script.'
+        required: false
+        default: 'test-ci'
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -69,6 +74,6 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-node-
     - name: npm install
-      if:  ${{ inputs.npm-install }} 
+      if: ${{ inputs.npm-install }}
       run: npm install --ignore-scripts
-    - run: npm run test-ci
+    - run: npm run ${{ inputs.npm-test-script }}
