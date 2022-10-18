@@ -40,9 +40,9 @@ jobs:
       nodeVersions: ${{ steps.split-node-versions.outputs.splitted }}
     steps:
       - id: split-os
-        run: echo "::set-output name=splitted::$(echo '${{ inputs.os }}' | jq -R -c 'split(",")')"
+        run: echo "splitted=$(echo '${{ inputs.os }}' | jq -R -c 'split(",")')" >> $GITHUB_OUTPUT
       - id: split-node-versions
-        run: echo "::set-output name=splitted::$(echo '${{ inputs.node-versions }}' | jq -R -c 'split(",")')"
+        run: echo "splitted=$(echo '${{ inputs.node-versions }}' | jq -R -c 'split(",")')" >> $GITHUB_OUTPUT
 
   test:
     name: Node ${{ matrix.node_version }} on ${{ matrix.os }}

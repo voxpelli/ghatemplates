@@ -36,11 +36,11 @@ jobs:
       tsProjects: ${{ steps.split-ts-projects.outputs.splitted }}
     steps:
       - id: split-ts-versions
-        run: echo "::set-output name=splitted::$(echo '${{ inputs.ts-versions }}' | jq -R -c 'split(",")')"
+        run: echo "splitted=$(echo '${{ inputs.ts-versions }}' | jq -R -c 'split(",")')" >> $GITHUB_OUTPUT
       - id: split-ts-libs
-        run: echo "::set-output name=splitted::$(echo '${{ inputs.ts-libs }}' | jq -R -c 'split(";")')"
+        run: echo "splitted=$(echo '${{ inputs.ts-libs }}' | jq -R -c 'split(";")')" >> $GITHUB_OUTPUT
       - id: split-ts-projects
-        run: echo "::set-output name=splitted::$(echo '${{ inputs.ts-projects }}' | jq -R -c 'split(",")')"
+        run: echo "splitted=$(echo '${{ inputs.ts-projects }}' | jq -R -c 'split(",")')" >> $GITHUB_OUTPUT
   test:
     name: TS ${{ matrix.ts_version }}, "${{ matrix.ts_lib }}", ${{ matrix.ts_project }}
     runs-on: ubuntu-latest

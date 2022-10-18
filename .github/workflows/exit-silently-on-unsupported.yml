@@ -33,9 +33,9 @@ jobs:
       nodeVersions: ${{ steps.split-node-versions.outputs.splitted }}
     steps:
       - id: split-files
-        run: echo "::set-output name=splitted::$(echo '${{ inputs.files }}' | jq -R -c 'split(",")')"
+        run: echo "splitted=$(echo '${{ inputs.files }}' | jq -R -c 'split(",")')" >> $GITHUB_OUTPUT
       - id: split-node-versions
-        run: echo "::set-output name=splitted::$(echo '${{ inputs.node-versions }}' | jq -R -c 'split(",")')"
+        run: echo "splitted=$(echo '${{ inputs.node-versions }}' | jq -R -c 'split(",")')" >> $GITHUB_OUTPUT
 
   test:
     name: ${{ matrix.files }} with Node ${{ matrix.node_version }}
