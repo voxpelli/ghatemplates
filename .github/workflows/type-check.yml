@@ -52,7 +52,7 @@ jobs:
       - id: split-ts-projects
         run: echo "splitted=$(echo '${{ inputs.ts-projects }}' | jq -R -c 'split(",")')" >> $GITHUB_OUTPUT
   test:
-    name: TS ${{ matrix.ts_version }}, "${{ matrix.ts_lib }}", ${{ matrix.ts_project }}
+    name: TS ${{ matrix.ts_version }}, "${{ matrix.ts_lib }}", ${{ inputs.ts-working-directory }}/${{ matrix.ts_project }}
     runs-on: ubuntu-latest
     needs:
       - resolve_inputs
@@ -88,14 +88,14 @@ jobs:
       - name: npm install
         run: npm install --ignore-scripts
 
+      - name: prebuild types
+        if: inputs.ts-prebuild
+        run: npx tsc
+
       - name: npm install working directory
         if: inputs.ts-working-directory != '.'
         run: npm install --ignore-scripts
         working-directory: ${{ inputs.ts-working-directory }}
-
-      - name: Prebuild types
-        if: inputs.ts-prebuild
-        run: npx tsc
 
       - name: install typescript version ${{ matrix.ts_version }}
         run: npm install --force typescript@${{ matrix.ts_version }}
