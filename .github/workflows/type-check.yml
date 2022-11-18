@@ -3,11 +3,10 @@ name: Type Checks
 on:
   workflow_call:
     inputs:
-      ts-prebuild:
-        description: 'Whether to build the types with the pre-existing setup first.'
+      ts-prebuild-script:
+        description: 'The npm script used to prebuild.'
         required: false
-        default: false
-        type: boolean
+        type: string
       ts-versions:
         description: 'A comma separated list of TypeScript versions that you want to test against.'
         required: false
@@ -24,7 +23,7 @@ on:
         default: '.'
         type: string
       ts-working-directory:
-        description: 'Where the ts-projects are relative to'
+        description: 'Where the ts-projects are relative to.'
         required: false
         default: '.'
         type: string
@@ -89,8 +88,8 @@ jobs:
         run: npm install --ignore-scripts
 
       - name: prebuild types
-        if: inputs.ts-prebuild
-        run: npx tsc
+        if: inputs.ts-prebuild-script
+        run: npm run ${{ inputs.ts-prebuild-script }}
 
       - name: npm install working directory
         if: inputs.ts-working-directory != '.'
