@@ -23,6 +23,11 @@ on:
         required: false
         default: '.'
         type: string
+      ts-working-directory:
+        description: 'Where the ts-projects are relative to'
+        required: false
+        default: '.'
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
@@ -83,14 +88,22 @@ jobs:
       - name: npm install
         run: npm install --ignore-scripts
 
+      - name: npm install working directory
+        if: inputs.ts-working-directory != '.'
+        run: npm install --ignore-scripts
+        working-directory: ${{ inputs.ts-working-directory }}
+
       - name: Prebuild types
         if: inputs.ts-prebuild
         run: npx tsc
 
       - name: install typescript version ${{ matrix.ts_version }}
         run: npm install --force typescript@${{ matrix.ts_version }}
+        working-directory: ${{ inputs.ts-working-directory }}
       - name: show installed typescript version
         run: npm list typescript --depth=0
+        working-directory: ${{ inputs.ts-working-directory }}
 
       - name: test using lib "${{ matrix.ts_lib }}"
         run: npx tsc -p ${{ matrix.ts_project }} --lib ${{ matrix.ts_lib }}
+        working-directory: ${{ inputs.ts-working-directory }}
