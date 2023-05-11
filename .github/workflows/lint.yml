@@ -13,6 +13,11 @@ on:
         required: false
         default: 'lts/*'
         type: string
+      lockfile:
+        description: 'Whether to expect a lockfile or not'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -62,6 +67,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: npm install
-        run: npm install --ignore-scripts
+      - if: !inputs.lockfile
+        run: npm install
+      - if: inputs.lockfile
+        run: npm ci
       - run: npm run check

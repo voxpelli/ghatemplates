@@ -19,6 +19,11 @@ on:
         description: 'Publish to GitHub Package Registry'
         required: false
         type: boolean
+      lockfile:
+        description: 'Whether to expect a lockfile or not'
+        required: false
+        default: false
+        type: boolean
   
 permissions:
   contents: read
@@ -56,7 +61,10 @@ jobs:
           node-version: lts/*
           registry-url: 'https://registry.npmjs.org'
       - run: npm install -g npm
-      - run: npm install
+      - if: !inputs.lockfile
+        run: npm install
+      - if: inputs.lockfile
+        run: npm ci
       - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
@@ -73,7 +81,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
-      - run: npm install
+      - if: !inputs.lockfile
+        run: npm install
+      - if: inputs.lockfile
+        run: npm ci
       - uses: actions/setup-node@v3
         with:
           node-version: lts/*
