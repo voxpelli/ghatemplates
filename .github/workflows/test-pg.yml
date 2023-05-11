@@ -76,9 +76,9 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node_version }}
-    - if: !inputs.lockfile
+    - if: inputs.lockfile == false
       run: npm install
-    - if: inputs.lockfile
+    - if: inputs.lockfile == true
       run: npm ci
     - run: npm run test-ci
       env:

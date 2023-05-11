@@ -67,8 +67,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - if: !inputs.lockfile
+      - if: inputs.lockfile == false
         run: npm install
-      - if: inputs.lockfile
+      - if: inputs.lockfile == true
         run: npm ci
       - run: npm run check
