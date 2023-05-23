@@ -15,7 +15,7 @@ on:
         description: 'Release as version'
         required: false
         type: string
-      gprPublish:
+      publishToGithub:
         description: 'Publish to GitHub Package Registry'
         required: false
         type: boolean
@@ -73,7 +73,7 @@ jobs:
     name: Publish to GitHub Package Registry
     runs-on: ubuntu-latest
     needs: release_please
-    if: inputs.gprPublish && needs.release_please.outputs.releaseCreated
+    if: inputs.publishToGithub && needs.release_please.outputs.releaseCreated
     permissions:
       packages: write
     steps:
