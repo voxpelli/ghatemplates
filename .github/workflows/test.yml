@@ -82,12 +82,16 @@ jobs:
         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json', '**/package.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
+
     - if: inputs.npm-install && !inputs.lockfile
-      run: npm install
+      run: npm install --ignore-scripts
       env:
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     - if: inputs.npm-install && inputs.lockfile
-      run: npm ci
+      run: npm ci --ignore-scripts
       env:
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+    - if: inputs.npm-install
+      run: npm rebuild && npm run prepare --if-present
+
     - run: npm run ${{ inputs.npm-test-script }}
