@@ -76,6 +76,7 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node_version }}
+        registry-url: 'https://registry.npmjs.org'
 
     - if: inputs.lockfile == false
       run: npm install --ignore-scripts
