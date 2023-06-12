@@ -84,6 +84,10 @@ jobs:
           ${{ runner.os }}-node-
     - if: inputs.npm-install && !inputs.lockfile
       run: npm install
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     - if: inputs.npm-install && inputs.lockfile
       run: npm ci
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     - run: npm run ${{ inputs.npm-test-script }}
