@@ -73,6 +73,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node_version }}
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Determine npm cache directory windows
         id: npm-cache-dir-windows
@@ -91,9 +92,14 @@ jobs:
             ${{ runner.os }}-node-
 
       - if: inputs.lockfile == false
-        run: npm install
+        run: npm install --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - if: inputs.lockfile == true
-        run: npm ci
+        run: npm ci --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm rebuild && npm run prepare --if-present
 
       - name: prebuild types
         if: inputs.ts-prebuild-script
