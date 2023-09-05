@@ -46,7 +46,7 @@ jobs:
         node_version: ${{ fromJson(needs.resolve_inputs.outputs.nodeVersions) }}
         os: ${{ fromJson(needs.resolve_inputs.outputs.os) }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node_version }}
         uses: actions/setup-node@v3
         with:
