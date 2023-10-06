@@ -61,7 +61,10 @@ jobs:
         os: ${{ fromJson(needs.resolve_inputs.outputs.os) }}
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
+      with:
+        show-progress: false
+
     - name: Use Node.js ${{ matrix.node_version }}
       uses: actions/setup-node@v3
       with:
