@@ -19,7 +19,7 @@ jobs:
         with:
           show-progress: false
 
-      - uses: actions/dependency-review-action@v3
+      - uses: actions/dependency-review-action@v4
         with:
           fail-on-severity: moderate
           deny-licenses: GPL-2.0, GPL-3.0, AGPL-1.0, AGPL-3.0
