@@ -24,6 +24,11 @@ on:
         required: false
         default: false
         type: boolean
+    secrets:
+      NPM_TOKEN:
+        required: true
+      GITHUB_TOKEN:
+        required: false
   
 permissions:
   contents: read
@@ -50,6 +55,7 @@ jobs:
   npm_publish:
     name: Publish to npm
     runs-on: ubuntu-latest
+    environment: npm
     needs: release_please
     if: needs.release_please.outputs.releaseCreated
     permissions:
