@@ -24,9 +24,6 @@ on:
         required: false
         default: false
         type: boolean
-    secrets:
-      NPM_TOKEN:
-        required: true
 
 permissions:
   contents: read
