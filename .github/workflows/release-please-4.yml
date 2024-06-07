@@ -23,6 +23,11 @@ on:
         required: false
         default: false
         type: boolean
+      npm-tag:
+        description: 'The distribution tag to publish to on npm'
+        required: false
+        default: 'latest'
+        type: string
 
 permissions:
   contents: read
@@ -64,7 +69,7 @@ jobs:
         run: npm install
       - if: inputs.lockfile == true
         run: npm ci
-      - run: npm publish --provenance --access public
+      - run: npm publish --provenance --access public --tag=${{ inputs.npm-tag }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
