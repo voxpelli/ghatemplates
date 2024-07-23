@@ -18,6 +18,11 @@ on:
         required: false
         default: true
         type: boolean
+      npm-no-prepare:
+        description: 'Whether to skick npm prepapare or not.'
+        required: false
+        default: false
+        type: boolean
       npm-test-script:
         description: 'The name of the npm test script.'
         required: false
@@ -92,6 +97,9 @@ jobs:
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
     - if: inputs.npm-install
-      run: npm rebuild && npm run prepare --if-present
+      run: npm rebuild
+
+    - if: inputs.npm-install && !inputs.npm-no-prepare
+      run: npm run prepare --if-present
 
     - run: npm run ${{ inputs.npm-test-script }}
