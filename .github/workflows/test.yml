@@ -19,7 +19,7 @@ on:
         default: true
         type: boolean
       npm-no-prepare:
-        description: 'Whether to skick npm prepapare or not.'
+        description: 'Whether to run npm prepare or not.'
         required: false
         default: false
         type: boolean
