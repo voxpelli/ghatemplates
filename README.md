@@ -1,6 +1,8 @@
 # Workflows
 
-Reusable GitHub Actions workflows
+My personal reusable GitHub Actions workflows.
+
+No versioning strategy for these ones, use as inspiration or at your own risk :)
 
 ## Some of the actions
 
