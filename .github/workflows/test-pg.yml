@@ -94,9 +94,9 @@ jobs:
 
     - run: npm run test-ci
       env:
-        DATABASE_URL: "postgres://postgres:postgres@localhost:${{ job.services.postgres.ports[5432] }}/postgres"
-        DATABASE_TEST_URL: "postgres://postgres:postgres@localhost:${{ job.services.postgres.ports[5432] }}/postgres"
+        DATABASE_URL: "postgres://postgres:postgres@localhost:${{ job.services.postgres.ports['5432'] }}/postgres"
+        DATABASE_TEST_URL: "postgres://postgres:postgres@localhost:${{ job.services.postgres.ports['5432'] }}/postgres"
         PGUSER: postgres
         PGPASSWORD: postgres
         PGDATABASE: postgres
-        PGPORT: ${{ job.services.postgres.ports[5432] }}
+        PGPORT: ${{ job.services.postgres.ports['5432'] }}
