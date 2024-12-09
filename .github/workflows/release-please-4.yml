@@ -39,7 +39,7 @@ permissions:
 jobs:
   release_please_bot_token:
     name: release-please bot
-    if: inputs.app-id
+    if: inputs.app-id != null
     environment: pr-bot
     runs-on: ubuntu-latest
     outputs:
@@ -61,7 +61,7 @@ jobs:
 
   release_please:
     name: release-please
-    if: !inputs.app-id
+    if: inputs.app-id == null
     runs-on: ubuntu-latest
     outputs:
       releaseCreated: ${{ steps.release.outputs.release_created }}
