@@ -37,18 +37,16 @@ permissions:
   contents: read
 
 jobs:
-  release_please:
-    name: release-please
+  release_please_bot_token:
+    name: release-please bot
+    if: inputs.app-id
+    environment: pr-bot
     runs-on: ubuntu-latest
     outputs:
       releaseCreated: ${{ steps.release.outputs.release_created }}
-    permissions:
-      contents: write
-      pull-requests: write
     steps:
       # Generate bot token
       - uses: actions/create-github-app-token@v1
-        if: inputs.app-id
         id: app-token
         with:
           app-id: ${{ inputs.app-id }}
@@ -59,14 +57,30 @@ jobs:
         with:
           config-file: ${{ inputs.config-file }}
           manifest-file: ${{ inputs.manifest-file }}
-          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          token: ${{ steps.app-token.outputs.token }}
+
+  release_please:
+    name: release-please
+    if: !inputs.app-id
+    runs-on: ubuntu-latest
+    outputs:
+      releaseCreated: ${{ steps.release.outputs.release_created }}
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: ${{ inputs.config-file }}
+          manifest-file: ${{ inputs.manifest-file }}
 
   npm_publish:
     name: Publish to npm
     runs-on: ubuntu-latest
     environment: npm
-    needs: release_please
-    if: needs.release_please.outputs.releaseCreated
+    needs: [release_please_bot_token, release_please]
+    if: needs.release_please_bot_token.outputs.releaseCreated || needs.release_please.outputs.releaseCreated
     permissions:
       id-token: write
     steps:
@@ -90,8 +104,8 @@ jobs:
   gpr_publish:
     name: Publish to GitHub Package Registry
     runs-on: ubuntu-latest
-    needs: release_please
-    if: inputs.publish-to-github && needs.release_please.outputs.releaseCreated
+    needs: [release_please_bot_token, release_please]
+    if: inputs.publish-to-github && (needs.release_please_bot_token.outputs.releaseCreated || needs.release_please.outputs.releaseCreated)
     permissions:
       packages: write
     steps:
