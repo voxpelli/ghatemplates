@@ -39,7 +39,6 @@ permissions:
 jobs:
   release_please:
     name: release-please
-    if: inputs.app-id != null
     environment: pr-bot
     runs-on: ubuntu-latest
     outputs:
