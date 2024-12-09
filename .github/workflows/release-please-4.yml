@@ -28,6 +28,10 @@ on:
         required: false
         default: 'latest'
         type: string
+      app-id:
+        description: 'The ID of a GitHub App that should be used to create the PR'
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -42,11 +46,20 @@ jobs:
       contents: write
       pull-requests: write
     steps:
+      # Generate bot token
+      - uses: actions/create-github-app-token@v1
+        if: inputs.app-id
+        id: app-token
+        with:
+          app-id: ${{ inputs.app-id }}
+          private-key: ${{ secrets.APP_PEM }}
+
       - uses: googleapis/release-please-action@v4
         id: release
         with:
           config-file: ${{ inputs.config-file }}
           manifest-file: ${{ inputs.manifest-file }}
+          token: ${{ steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
 
   npm_publish:
     name: Publish to npm
