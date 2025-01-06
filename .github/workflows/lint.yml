@@ -73,11 +73,11 @@ jobs:
             ${{ runner.os }}-node-
 
       - if: inputs.lockfile == false
-        run: npm install --ignore-scripts
+        run: npm install --ignore-scripts --no-fund --no-audit
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - if: inputs.lockfile == true
-        run: npm ci --ignore-scripts
+        run: npm ci --ignore-scripts --no-fund --no-audit
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npm rebuild && npm run prepare --if-present
