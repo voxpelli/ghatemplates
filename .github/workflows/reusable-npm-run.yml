@@ -1,0 +1,66 @@
+name: Reusable npm run
+
+on:
+  workflow_call:
+    inputs:
+      command:
+        description: 'npm run command'
+        required: true
+        type: string
+      node-version:
+        default: 'lts/*'
+        description: 'node version'
+        required: false
+        type: string
+      lockfile:
+        description: 'Whether to expect a lockfile or not'
+        required: false
+        default: false
+        type: boolean
+  
+permissions:
+  contents: read
+
+jobs:
+  npm_run:
+    name: npm run ${{ inputs.command }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          show-progress: false
+
+      - name: Use Node.js ${{ inputs.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      # Caching and installing
+      - name: Determine npm cache directory windows
+        id: npm-cache-dir-windows
+        if: runner.os == 'Windows'
+        run: echo "dir=$(npm config get cache)" >> $env:GITHUB_OUTPUT
+      - name: Determine npm cache directory non-windows
+        id: npm-cache-dir
+        if: runner.os != 'Windows'
+        run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        with:
+          path: ${{ steps.npm-cache-dir-windows.outputs.dir || steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json', '**/package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - if: inputs.lockfile == false
+        run: npm install --ignore-scripts --no-fund --no-audit
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - if: inputs.lockfile == true
+        run: npm ci --ignore-scripts --no-fund --no-audit
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm rebuild && npm run prepare --if-present
+
+      - run: npm run ${{ inputs.command }}
