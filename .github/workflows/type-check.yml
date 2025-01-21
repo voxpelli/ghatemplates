@@ -107,7 +107,7 @@ jobs:
 
       - name: npm install working directory
         if: inputs.ts-working-directory != '.'
-        run: npm install
+        run: npm install --ignore-scripts
         working-directory: ${{ inputs.ts-working-directory }}
 
       - name: install typescript version ${{ matrix.ts_version }}
