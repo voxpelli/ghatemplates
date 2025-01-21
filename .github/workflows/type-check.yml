@@ -7,6 +7,11 @@ on:
         description: 'The npm script used to prebuild.'
         required: false
         type: string
+      ts-prebuild-script-working-directory:
+        description: 'Where the npm script used to prebuild is supposed to be run from.'
+        required: false
+        default: '.'
+        type: string
       ts-versions:
         description: 'A comma separated list of TypeScript versions that you want to test against.'
         required: false
@@ -104,6 +109,7 @@ jobs:
       - name: prebuild types
         if: inputs.ts-prebuild-script
         run: npm run ${{ inputs.ts-prebuild-script }}
+        working-directory: ${{ inputs.ts-prebuild-script-working-directory }}
 
       - name: npm install working directory
         if: inputs.ts-working-directory != '.'
