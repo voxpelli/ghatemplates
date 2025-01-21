@@ -1,4 +1,4 @@
-name: Node Tests with Postgres
+name: "Reusable: Node Tests with Postgres"
 
 on:
   workflow_call:

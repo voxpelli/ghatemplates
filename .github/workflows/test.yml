@@ -1,4 +1,4 @@
-name: Node Tests
+name: "Reusable: Node Tests"
 
 on:
   workflow_call:
