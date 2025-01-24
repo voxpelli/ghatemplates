@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       app-id:
-        description: 'ID of atheGitHub App that should be used to create the PR'
+        description: 'ID of the GitHub App that should be used to create the PR'
         required: true
         type: string
       config-file:
