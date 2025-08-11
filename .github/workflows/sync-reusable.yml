@@ -109,7 +109,7 @@ jobs:
           fi
 
       # Generate bot token if APP_ID is set
-      - uses: actions/create-github-app-token@v1
+      - uses: actions/create-github-app-token@v2
         if: inputs.app-id && (steps.diff.outputs.hasDiff || !inputs.diff-files)
         id: app-token
         with:
