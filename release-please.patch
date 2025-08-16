@@ -7,9 +7,9 @@ Subject: [PATCH] ci: add release-please
  .github/release-please/config.json   | 21 +++++++++++++++++++++
  .github/release-please/manifest.json |  1 +
  .github/workflows/compliance.yml     | 21 +++++++++++++++++++++
- .github/workflows/release-please.yml | 15 +++++++++++++++
+ .github/workflows/release-please.yml | 25 +++++++++++++++++++++++++
  .husky/commit-msg                    |  3 +++
- 5 files changed, 63 insertions(+), 0 deletion(-)
+ 5 files changed, 73 insertions(+), 0 deletion(-)
  create mode 100644 .github/release-please/config.json
  create mode 100644 .github/release-please/manifest.json
  create mode 100644 .github/workflows/compliance.yml
@@ -82,13 +82,20 @@ new file mode 100644
 index 0000000..b4743f4
 --- /dev/null
 +++ b/.github/workflows/release-please.yml
-@@ -0,0 +1,15 @@
+@@ -0,0 +1,25 @@
 +name: Release Please
 +
 +on:
 +  push:
 +    branches:
 +      - main
++
++  workflow_dispatch:
++    inputs:
++      force-release:
++        description: 'Force release to npm'
++        required: false
++        type: boolean
 +
 +permissions:
 +  contents: read
@@ -98,6 +105,9 @@ index 0000000..b4743f4
 +  release-please:
 +    uses: voxpelli/ghatemplates/.github/workflows/release-please-oidc.yml@main
 +    secrets: inherit
++    with:
++      app-id: '1082006'
++      force-release: ${{ inputs.force-release }}
 diff --git a/.husky/commit-msg b/.husky/commit-msg
 new file mode 100755
 index 0000000..6eb889f

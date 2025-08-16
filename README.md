@@ -176,6 +176,13 @@ on:
     branches:
       - main
 
+  workflow_dispatch:
+    inputs:
+      force-release:
+        description: 'Force release to npm'
+        required: false
+        type: boolean
+
 permissions:
   contents: read
   id-token: write
@@ -184,6 +191,10 @@ jobs:
   release-please:
     uses: voxpelli/ghatemplates/.github/workflows/release-please-oidc.yml@main
     secrets: inherit
+    with:
+      app-id: '1082006'
+      force-release: ${{ inputs.force-release }}
+
 ```
 
 </details>
