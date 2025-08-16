@@ -49,6 +49,7 @@ jobs:
 
   npm_publish:
     uses: ./.github/workflows/reusable-npm-publish-oidc.yml
+    needs: release_please
     if: needs.release_please.outputs.releaseCreated || inputs.force-release
     permissions:
       contents: read
