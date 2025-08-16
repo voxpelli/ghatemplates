@@ -1,5 +1,4 @@
-name: release-please
-
+name: release-please (DEPRECATED)
 on:
   workflow_call:
     inputs:

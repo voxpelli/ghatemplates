@@ -1,0 +1,91 @@
+name: release-please oidc
+
+on:
+  workflow_call:
+    secrets:
+      APP_PEM:
+        description: 'The private key of the GitHub App to use for the PR creation.'
+        required: false
+
+    inputs:
+      app-id:
+        description: 'ID of the GitHub App that should be used to create the PR'
+        required: true
+        type: string
+      config-file:
+        description: 'The path to the release-please config file'
+        required: false
+        default: '.github/release-please/config.json'
+        type: string
+      manifest-file:
+        description: 'The path to the release-please manifest file'
+        required: false
+        default: '.github/release-please/manifest.json'
+        type: string
+      lockfile:
+        description: 'Whether to expect a lockfile or not'
+        required: false
+        default: false
+        type: boolean
+      npm-tag:
+        description: 'The distribution tag to publish to on npm'
+        required: false
+        default: 'latest'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  release_please:
+    name: release-please
+    environment: pr-bot
+    runs-on: ubuntu-latest
+    outputs:
+      releaseCreated: ${{ steps.release.outputs.release_created }}
+    steps:
+      # Generate bot token
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ inputs.app-id }}
+          private-key: ${{ secrets.APP_PEM }}
+
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: ${{ inputs.config-file }}
+          manifest-file: ${{ inputs.manifest-file }}
+          token: ${{ steps.app-token.outputs.token }}
+
+  npm_publish:
+    name: Publish to npm
+    runs-on: ubuntu-latest
+    environment: npm
+
+    needs: release_please
+    if: needs.release_please.outputs.releaseCreated
+
+    permissions:
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+          show-progress: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          registry-url: 'https://registry.npmjs.org'
+
+      # Ensure we always use the latest npm so that we eg. can use OIDC publishing: https://github.blog/changelog/2025-07-31-npm-trusted-publishing-with-oidc-is-generally-available/
+      - name: Use latest npm
+        run: npm install -g npm@latest
+
+      - if: inputs.lockfile == false
+        run: npm install
+      - if: inputs.lockfile == true
+        run: npm ci
+
+      - run: npm publish --access public --tag=${{ inputs.npm-tag }}
