@@ -1,0 +1,54 @@
+name: reusable release-please bot
+
+on:
+  workflow_call:
+    secrets:
+      APP_PEM:
+        description: 'The private key of the GitHub App to use for the PR creation.'
+        required: false
+
+    inputs:
+      app-id:
+        description: 'ID of the GitHub App that should be used to create the PR'
+        required: true
+        type: string
+      config-file:
+        description: 'The path to the release-please config file'
+        required: false
+        default: '.github/release-please/config.json'
+        type: string
+      manifest-file:
+        description: 'The path to the release-please manifest file'
+        required: false
+        default: '.github/release-please/manifest.json'
+        type: string
+
+    outputs:
+      releaseCreated:
+        description: "Whether a release has been created and expects to be published"
+        value: ${{ jobs.release_please.outputs.releaseCreated }}
+
+permissions:
+  contents: read
+
+jobs:
+  release_please:
+    name: release-please
+    environment: pr-bot
+    runs-on: ubuntu-latest
+    outputs:
+      releaseCreated: ${{ steps.release.outputs.release_created }}
+    steps:
+      # Generate bot token
+      - uses: actions/create-github-app-token@v2
+        id: app-token
+        with:
+          app-id: ${{ inputs.app-id }}
+          private-key: ${{ secrets.APP_PEM }}
+
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: ${{ inputs.config-file }}
+          manifest-file: ${{ inputs.manifest-file }}
+          token: ${{ steps.app-token.outputs.token }}
