@@ -107,7 +107,7 @@ index 0000000..b4743f4
 +    secrets: inherit
 +    with:
 +      app-id: '1082006'
-+      force-release: ${{ inputs.force-release }}
++      force-release: ${{ inputs.force-release || false }}
 diff --git a/.husky/commit-msg b/.husky/commit-msg
 new file mode 100755
 index 0000000..6eb889f

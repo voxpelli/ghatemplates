@@ -193,7 +193,7 @@ jobs:
     secrets: inherit
     with:
       app-id: '1082006'
-      force-release: ${{ inputs.force-release }}
+      force-release: ${{ inputs.force-release || false }}
 
 ```
 
