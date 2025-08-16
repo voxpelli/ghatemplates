@@ -33,9 +33,6 @@ on:
         default: 'latest'
         type: string
 
-permissions:
-  contents: read
-
 jobs:
   release_please:
     uses: ./.github/workflows/reusable-release-please-bot.yml
@@ -48,6 +45,7 @@ jobs:
   npm_publish:
     uses: ./.github/workflows/reusable-npm-publish-oidc.yml
     permissions:
+      contents: read
       id-token: write
     with:
       lockfile: ${{ inputs.lockfile }}
