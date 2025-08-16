@@ -32,6 +32,11 @@ on:
         required: false
         default: 'latest'
         type: string
+      force-release:
+        description: 'Force a release no matter if release-please thinks it should be a release'
+        required: false
+        default: false
+        type: boolean
 
 jobs:
   release_please:
@@ -44,6 +49,7 @@ jobs:
 
   npm_publish:
     uses: ./.github/workflows/reusable-npm-publish-oidc.yml
+    if: needs.release_please.outputs.releaseCreated || inputs.force-release
     permissions:
       contents: read
       id-token: write
