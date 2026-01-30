@@ -134,6 +134,6 @@ jobs:
           "
 
       - name: Type check using tstyche with TS ${{ matrix.ts_version }}
-        run: npx tstyche -y --target '${{ matrix.ts_version }}' --tsconfig ${{ matrix.ts_project }} --reporters ${{ inputs.tstyche-reporters }}
+        run: npx -y tstyche --target '${{ matrix.ts_version }}' --tsconfig ${{ matrix.ts_project }} --reporters ${{ inputs.tstyche-reporters }}
         working-directory: ${{ inputs.ts-working-directory }}
 
