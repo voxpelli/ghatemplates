@@ -46,7 +46,7 @@ jobs:
         node_version: ${{ fromJson(needs.resolve_inputs.outputs.nodeVersions) }}
         os: ${{ fromJson(needs.resolve_inputs.outputs.os) }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
           show-progress: false
