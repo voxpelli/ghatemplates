@@ -8,8 +8,9 @@ My personal reusable GitHub Actions workflows (geared towards node.js)
 
 ### Code Quality & Analysis
 
-* [dependency-review.yml](./.github/workflows/dependency-review.yml) – Wrapper around [`actions/dependency-review-action`](https://github.com/actions/dependency-review-action) thar configures it to eg. fail for GPL and AGPL dependencies (as is typical in the JS ecosystem)
+* [dependency-review.yml](./.github/workflows/dependency-review.yml) – Wrapper around [`actions/dependency-review-action`](https://github.com/actions/dependency-review-action) that configures it to eg. fail for GPL and AGPL dependencies (as is typical in the JS ecosystem)
 * [lint.yml](./.github/workflows/lint.yml) – Runs the npm script `check` on your codebase for linting etc.
+* [reusable-tstyche.yml](./.github/workflows/reusable-tstyche.yml) – Runs [TSTyche](https://tstyche.org/) type tests across multiple TypeScript versions, libs, and projects. Kind of replaces [type-check.yml](./.github/workflows/type-check.yml).
 * [type-check.yml](./.github/workflows/type-check.yml) – Performs TypeScript type checking across multiple TS versions.
 
 ### Publishing & Release Automation

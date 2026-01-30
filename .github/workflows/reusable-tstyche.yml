@@ -1,4 +1,4 @@
-name: "Reusable: Type Checks"
+name: "Reusable: TSTyche checks"
 
 on:
   workflow_call:
@@ -15,22 +15,27 @@ on:
       ts-versions:
         description: 'A comma separated list of TypeScript versions that you want to test against.'
         required: false
-        default: '4.5,4.6,4.7,4.8'
+        default: '>=5.8,next'
         type: string
       ts-libs:
         description: 'A semi-colon separated list of TypeScript libs that you want to test against.'
         required: false
-        default: 'es2020;esnext'
+        default: 'es2022;esnext'
         type: string
       ts-projects:
         description: 'A comma separated list of TypeScript projects that you want to test.'
         required: false
-        default: '.'
+        default: 'tsconfig.json'
         type: string
       ts-working-directory:
         description: 'Where the ts-projects are relative to.'
         required: false
         default: '.'
+        type: string
+      tstyche-reporters:
+        description: 'What TSTyche reporters to use.'
+        required: false
+        default: 'list,summary'
         type: string
       lockfile:
         description: 'Whether to expect a lockfile or not'
@@ -106,7 +111,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npm rebuild && npm run prepare --if-present
 
-      - name: prebuild types
+      - name: Prebuild types
         if: inputs.ts-prebuild-script
         run: npm run ${{ inputs.ts-prebuild-script }}
         working-directory: ${{ inputs.ts-prebuild-script-working-directory }}
@@ -116,13 +121,19 @@ jobs:
         run: npm install --ignore-scripts
         working-directory: ${{ inputs.ts-working-directory }}
 
-      - name: install typescript version ${{ matrix.ts_version }}
-        run: npm install --force typescript@${{ matrix.ts_version }}
-        working-directory: ${{ inputs.ts-working-directory }}
-      - name: show installed typescript version
-        run: npm list typescript --depth=0
+      - name: Update tsconfig lib to "${{ matrix.ts_lib }}"
+        run: |
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            const configPath = path.join('${{ inputs.ts-working-directory }}', '${{ matrix.ts_project }}');
+            const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+            config.compilerOptions = config.compilerOptions || {};
+            config.compilerOptions.lib = ['${{ matrix.ts_lib }}'];
+            fs.writeFileSync(configPath, JSON.stringify(config, null, 2));
+          "
+
+      - name: Type check using tstyche with TS ${{ matrix.ts_version }}
+        run: npx tstyche -y --target '${{ matrix.ts_version }}' --tsconfig ${{ matrix.ts_project }} --reporters ${{ inputs.tstyche-reporters }}
         working-directory: ${{ inputs.ts-working-directory }}
 
-      - name: test using lib "${{ matrix.ts_lib }}"
-        run: npx tsc -p ${{ matrix.ts_project }} --lib ${{ matrix.ts_lib }}
-        working-directory: ${{ inputs.ts-working-directory }}
