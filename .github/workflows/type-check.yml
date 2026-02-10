@@ -69,7 +69,7 @@ jobs:
         ts_lib: ${{ fromJson(needs.resolve_inputs.outputs.tsLibs) }}
         ts_project: ${{ fromJson(needs.resolve_inputs.outputs.tsProjects) }}
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           persist-credentials: false
           show-progress: false
