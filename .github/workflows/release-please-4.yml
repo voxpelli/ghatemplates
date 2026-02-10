@@ -61,7 +61,7 @@ jobs:
         with:
           persist-credentials: false
           show-progress: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: lts/*
           registry-url: 'https://registry.npmjs.org'
@@ -86,14 +86,14 @@ jobs:
         with:
           persist-credentials: false
           show-progress: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: lts/*
       - if: inputs.lockfile == false
         run: npm install
       - if: inputs.lockfile == true
         run: npm ci
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
           node-version: lts/*
           registry-url: 'https://npm.pkg.github.com'
