@@ -81,7 +81,7 @@ jobs:
       id: npm-cache-dir
       if: inputs.npm-install && runner.os != 'Windows'
       run: echo "dir=$(npm config get cache)" >> $GITHUB_OUTPUT
-    - uses: actions/cache@v4
+    - uses: actions/cache@v5
       if: ${{ inputs.npm-install }} 
       with:
         path: ${{ steps.npm-cache-dir-windows.outputs.dir || steps.npm-cache-dir.outputs.dir }}
