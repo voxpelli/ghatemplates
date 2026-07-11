@@ -16,7 +16,7 @@ jobs:
           persist-credentials: false
           show-progress: false
 
-      - uses: actions/dependency-review-action@v4
+      - uses: actions/dependency-review-action@v5.0.0
         with:
           fail-on-severity: moderate
           deny-licenses: GPL-2.0, GPL-3.0, AGPL-1.0, AGPL-3.0
