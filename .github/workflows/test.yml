@@ -33,8 +33,24 @@ on:
         required: false
         default: false
         type: boolean
+      coverage-file:
+        description: 'Path to the coverage report file. If provided, the coverage report will be uploaded.'
+        required: false
+        default: ''
+        type: string
+      coverage-language:
+        description: 'The language of the coverage report (eg. javascript).'
+        required: false
+        default: ''
+        type: string
+      coverage-label:
+        description: 'Label for the coverage report.'
+        required: false
+        default: ''
+        type: string
 
 permissions:
+  checks: write
   contents: read
 
 jobs:
@@ -104,3 +120,11 @@ jobs:
       run: npm run prepare --if-present
 
     - run: npm run ${{ inputs.npm-test-script }}
+
+    - name: Upload coverage report
+      if: inputs.coverage-file != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+      uses: actions/upload-code-coverage@v1
+      with:
+        file: ${{ inputs.coverage-file }}
+        language: ${{ inputs.coverage-language }}
+        label: ${{ inputs.coverage-label }}
