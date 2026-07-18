@@ -23,28 +23,12 @@ on:
         required: false
         default: false
         type: boolean
-      coverage-file:
-        description: 'Path to the coverage report file. If provided, the coverage report will be uploaded.'
-        required: false
-        default: ''
-        type: string
-      coverage-language:
-        description: 'The language of the coverage report (eg. javascript).'
-        required: false
-        default: ''
-        type: string
-      coverage-label:
-        description: 'Label for the coverage report.'
-        required: false
-        default: ''
-        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
 permissions:
-  checks: write
   contents: read
 
 jobs:
@@ -116,11 +100,3 @@ jobs:
         PGPASSWORD: postgres
         PGDATABASE: postgres
         PGPORT: ${{ job.services.postgres.ports['5432'] }}
-
-    - name: Upload coverage report
-      if: inputs.coverage-file != '' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
-      uses: actions/upload-code-coverage@v1
-      with:
-        file: ${{ inputs.coverage-file }}
-        language: ${{ inputs.coverage-language }}
-        label: ${{ inputs.coverage-label }}

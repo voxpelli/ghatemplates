@@ -23,8 +23,8 @@ My personal reusable GitHub Actions workflows (geared towards node.js)
 
 * [exit-silently-on-unsupported.yml](./.github/workflows/exit-silently-on-unsupported.yml) – Tests that CLI tools exists silently on unsupported Node.js versions (see eg. [version-guard](https://github.com/voxpelli/version-guard)).
 * [simple-test.yml](./.github/workflows/simple-test.yml) – Runs `npm test` on `lts/*` - nothing more, nothing less.
-* [test-pg.yml](./.github/workflows/test-pg.yml) – Like `test.yml` but starts a Postgres service before and includes Postgres version as another dimension in the test matrix. Supports coverage upload via `coverage-file`, `coverage-language`, and `coverage-label` inputs.
-* [test.yml](./.github/workflows/test.yml) – Runs a npm test script (defaulting to `test-ci`) across an OS + Node.js version matrix. Supports coverage upload via `coverage-file`, `coverage-language`, and `coverage-label` inputs.
+* [test-pg.yml](./.github/workflows/test-pg.yml) – Like `test.yml` but starts a Postgres service before and includes Postgres version as another dimension in the test matrix.
+* [test.yml](./.github/workflows/test.yml) – Runs a npm test script (defaulting to `test-ci`) across an OS + Node.js version matrix.
 
 ### Utility
 
