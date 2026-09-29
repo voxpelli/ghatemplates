@@ -58,7 +58,7 @@ jobs:
   diff:
     name: Sync ${{ inputs.npm-sync-script }}
     environment: pr-bot
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
       # Set up repository
       - uses: actions/checkout@v6
